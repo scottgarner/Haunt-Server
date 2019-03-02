@@ -9,7 +9,7 @@ const request = require('request');
 const port = process.env.PORT || 3000;
 const key = process.env.KEY || "";
 
-const TPLSmartDevice = require('tplink-lightbulb');
+const { Client } = require('tplink-smarthome-api');
 
 /*
 192.168.86.41 - Plug - HS105(US)
@@ -18,31 +18,33 @@ const TPLSmartDevice = require('tplink-lightbulb');
 192.168.86.39 - Left Desk - LB120(US)
 */
 
-const devices = new Map([
-    //    ['192.168.86.41', {}],
-    [new TPLSmartDevice('192.168.86.26'), {}],
-    [new TPLSmartDevice('192.168.86.40'), {}],
-    [new TPLSmartDevice('192.168.86.39'), {}]
-]);
+const devices = new Map();
+
+const client = new Client();
+
+client.getDevice({ host: '192.168.86.26' }).then((device) => {
+    devices.set('192.168.86.26', device);
+});
+client.getDevice({ host: '192.168.86.39' }).then((device) => {
+    devices.set('192.168.86.39', device);
+});
+client.getDevice({ host: '192.168.86.40' }).then((device) => {
+    devices.set('192.168.86.40', device);
+});
 
 app.get('/', function (req, res) {
-
-
-    res.send('HomeBoi');
+    res.send('Haunt');
 });
 
 app.get('/power/:state/', function (req, res) {
 
-    let state = (req.params.state === "on");
+    let state = {
+        transition_period: 0,
+        on_off: (req.params.state === "on")
+    }
 
-    devices.forEach((value, key) => {
-
-        key.power(state, 0)
-            .then(status => {
-                console.log(status)
-            })
-            .catch(err => console.error(err))
-
+    devices.forEach((device, ip) => {
+        device.lighting.setLightState(state);
     });
 
     //
