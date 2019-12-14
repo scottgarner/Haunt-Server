@@ -49,7 +49,7 @@ app.get('/power/:state/', function (req, res) {
 
     //
 
-    res.send('hello world');
+    res.send('Power state updated.');
 })
 
 app.get('/scene/:scene/', function (req, res) {
@@ -67,7 +67,7 @@ app.get('/scene/:scene/', function (req, res) {
 
     //
 
-    res.send('hello world');
+    res.send('Scene state updated.');
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
