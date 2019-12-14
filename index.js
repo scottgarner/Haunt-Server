@@ -33,7 +33,7 @@ client.getDevice({ host: '192.168.86.40' }).then((device) => {
 });
 
 app.get('/', function (req, res) {
-    res.send('Haunt');
+    res.send('Haunt server.');
 });
 
 app.get('/power/:state/', function (req, res) {
